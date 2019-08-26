@@ -20,14 +20,16 @@
 ------------------------------------------------------------------------------]]
 --Start of Global Scope---------------------------------------------------------
 
-Script.serveEvent('CombineFilters3D.OnMessage1', 'OnMessage1', 'string')
-Script.serveEvent('CombineFilters3D.OnMessage2', 'OnMessage2', 'string')
+Script.serveEvent('CombineFilters3D.OnMessage1', 'OnMessage1')
+Script.serveEvent('CombineFilters3D.OnMessage2', 'OnMessage2')
 
 -- Create viewer for original and filtered 3D image
 local viewer1 = View.create()
 viewer1:setID('viewer1')
 local viewer2 = View.create()
 viewer2:setID('viewer2')
+local imDeco = View.ImageDecoration.create()
+imDeco:setRange(36, 157)
 
 --End of Global Scope-----------------------------------------------------------
 
@@ -44,7 +46,7 @@ local function filteringImage(heightMap, intensityMap)
 
   -- Visualize the input (median image)
   viewer1:clear()
-  viewer1:addHeightmap({medianImage, medianIntensityMap}, {}, {'Reflectance'}) -- Add the current filtered heightMap
+  viewer1:addHeightmap({medianImage, medianIntensityMap}, imDeco, {'Reflectance'}) -- Add the current filtered heightMap
   viewer1:present()
 
   Script.notifyEvent('OnMessage1', 'Original image')
@@ -52,14 +54,16 @@ local function filteringImage(heightMap, intensityMap)
   -- Filter on the medianImage
   local kernelsize2 = 7 -- Size of the kernel, must be positive and odd
   local gaussImage = medianImage:gauss(kernelsize2) -- Gauss filtering
-  local gaussIntensityMap =  medianIntensityMap:gauss(kernelsize2)
+  local gaussIntensityMap = medianIntensityMap:gauss(kernelsize2)
 
   -- Visualize the output (median + gauss image)
   viewer2:clear()
-  viewer2:addHeightmap({gaussImage, gaussIntensityMap}, {}, {'Reflectance'}) -- Add the second current filtered heightMap
+  -- Add the second current filtered heightMap
+  viewer2:addHeightmap({gaussImage, gaussIntensityMap}, imDeco, {'Reflectance'})
   viewer2:present()
-  
-  Script.notifyEvent('OnMessage2', 'Median filter, kernel size: ' .. kernelsize .. '. Gauss filter, kernel size: ' .. kernelsize2)
+
+  Script.notifyEvent('OnMessage2', 'Median filter, kernel size: ' ..
+                     kernelsize .. '. Gauss filter, kernel size: ' .. kernelsize2)
 end
 
 local function main()
