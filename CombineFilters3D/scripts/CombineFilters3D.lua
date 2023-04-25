@@ -8,14 +8,14 @@ Script.serveEvent('CombineFilters3D.OnMessage2', 'OnMessage2')
 
 local viewer1 = View.create('viewer3D1') -- Will show in 3D viewer
 local viewer2 = View.create('viewer3D2') -- Will show in 3D viewer
-local imDeco = View.ImageDecoration.create()
-imDeco:setRange(36, 157)
+local imDeco = View.ImageDecoration.create():setRange(36, 157)
 
 --End of Global Scope-----------------------------------------------------------
 
 -- Start of Function and Event Scope--------------------------------------------
 
---@filteringImage(heightMap:Image, intensityMap:Image)
+---@param heightMap Image
+---@param intensityMap Image
 local function filteringImage(heightMap, intensityMap)
   -- COMBINE FILTERS: This is an example using first median filter and then gauss filter
 
